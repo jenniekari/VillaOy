@@ -29,7 +29,7 @@ namespace VillaOy.Controllers
                 ViewBag.LoginMessage = "Kirjautuminen onnistui!";
                 ViewBag.LoggedStatus = "In";
                 Session["UserName"] = LoggedUser.UserName;
-                return RedirectToAction("Index", "TuotteetAdmin"); //Tässä määritellään mihin onnistunut kirjautuminen johtaa --> Home/Index
+                return RedirectToAction("Index", "Postitoimipaikat"); //Tässä määritellään mihin onnistunut kirjautuminen johtaa --> Home/Index
             }
             else
             {
