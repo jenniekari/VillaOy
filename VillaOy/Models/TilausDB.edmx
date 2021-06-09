@@ -4,157 +4,173 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="TilausDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Asiakkaat">
-          <Key>
-            <PropertyRef Name="AsiakasID" />
-          </Key>
-          <Property Name="AsiakasID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Nimi" Type="varchar" MaxLength="50" />
-          <Property Name="Osoite" Type="varchar" MaxLength="50" />
-          <Property Name="Postinumero" Type="nchar" MaxLength="5" />
-        </EntityType>
-        <EntityType Name="Henkilot">
-          <Key>
-            <PropertyRef Name="Henkilo_id" />
-          </Key>
-          <Property Name="Henkilo_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Etunimi" Type="nvarchar" MaxLength="50" />
-          <Property Name="Sukunimi" Type="nvarchar" MaxLength="50" />
-          <Property Name="Osoite" Type="nvarchar" MaxLength="100" />
-          <Property Name="Esimies" Type="int" />
-          <Property Name="Postinumero" Type="varchar" MaxLength="5" />
-          <Property Name="Sahkoposti" Type="nvarchar" MaxLength="100" />
-        </EntityType>
-        <EntityType Name="Logins">
-          <Key>
-            <PropertyRef Name="LoginId" />
-          </Key>
-          <Property Name="LoginId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="PassWord" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="ErrorMessage" Type="nvarchar" MaxLength="50" />
-        </EntityType>
-        <EntityType Name="Post">
-          <Key>
-            <PropertyRef Name="Postnro" />
-          </Key>
-          <Property Name="Postnro" Type="nchar" MaxLength="5" Nullable="false" />
-          <Property Name="Postplace" Type="nvarchar" MaxLength="50" />
-        </EntityType>
-        <EntityType Name="Postitoimipaikat">
-          <Key>
-            <PropertyRef Name="Postinumero" />
-          </Key>
-          <Property Name="Postinumero" Type="nchar" MaxLength="5" Nullable="false" />
-          <Property Name="Postitoimipaikka" Type="varchar" MaxLength="50" />
-        </EntityType>
-        <EntityType Name="Tilaukset">
-          <Key>
-            <PropertyRef Name="TilausID" />
-          </Key>
-          <Property Name="TilausID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="AsiakasID" Type="int" />
-          <Property Name="Toimitusosoite" Type="varchar" MaxLength="100" />
-          <Property Name="Postinumero" Type="nchar" MaxLength="5" />
-          <Property Name="Tilauspvm" Type="datetime" />
-          <Property Name="Toimituspvm" Type="datetime" />
-        </EntityType>
-        <EntityType Name="Tilausrivit">
-          <Key>
-            <PropertyRef Name="TilausriviID" />
-          </Key>
-          <Property Name="TilausriviID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="TilausID" Type="int" />
-          <Property Name="TuoteID" Type="int" />
-          <Property Name="Maara" Type="int" />
-          <Property Name="Ahinta" Type="numeric" Precision="5" Scale="2" />
-        </EntityType>
-        <EntityType Name="Tuotteet">
-          <Key>
-            <PropertyRef Name="TuoteID" />
-          </Key>
-          <Property Name="TuoteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Nimi" Type="varchar" MaxLength="50" />
-          <Property Name="Ahinta" Type="numeric" Precision="7" Scale="2" />
-          <Property Name="Kuva" Type="image" />
-          <Property Name="Kuvalinkki" Type="nvarchar" MaxLength="200" />
-        </EntityType>
-        <Association Name="FK_Tilaukset_Asiakkaat">
-          <End Role="Asiakkaat" Type="Self.Asiakkaat" Multiplicity="0..1" />
-          <End Role="Tilaukset" Type="Self.Tilaukset" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Asiakkaat">
-              <PropertyRef Name="AsiakasID" />
-            </Principal>
-            <Dependent Role="Tilaukset">
-              <PropertyRef Name="AsiakasID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Tilaukset_Postitoimipaikat">
-          <End Role="Postitoimipaikat" Type="Self.Postitoimipaikat" Multiplicity="0..1" />
-          <End Role="Tilaukset" Type="Self.Tilaukset" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Postitoimipaikat">
-              <PropertyRef Name="Postinumero" />
-            </Principal>
-            <Dependent Role="Tilaukset">
-              <PropertyRef Name="Postinumero" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Tilausrivit_Tilaukset">
-          <End Role="Tilaukset" Type="Self.Tilaukset" Multiplicity="0..1" />
-          <End Role="Tilausrivit" Type="Self.Tilausrivit" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Tilaukset">
-              <PropertyRef Name="TilausID" />
-            </Principal>
-            <Dependent Role="Tilausrivit">
-              <PropertyRef Name="TilausID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Tilausrivit_Tuotteet">
-          <End Role="Tuotteet" Type="Self.Tuotteet" Multiplicity="0..1" />
-          <End Role="Tilausrivit" Type="Self.Tilausrivit" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Tuotteet">
-              <PropertyRef Name="TuoteID" />
-            </Principal>
-            <Dependent Role="Tilausrivit">
-              <PropertyRef Name="TuoteID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="TilausDBModelStoreContainer">
-          <EntitySet Name="Asiakkaat" EntityType="Self.Asiakkaat" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Henkilot" EntityType="Self.Henkilot" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Logins" EntityType="Self.Logins" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Post" EntityType="Self.Post" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Postitoimipaikat" EntityType="Self.Postitoimipaikat" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Tilaukset" EntityType="Self.Tilaukset" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Tilausrivit" EntityType="Self.Tilausrivit" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Tuotteet" EntityType="Self.Tuotteet" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Tilaukset_Asiakkaat" Association="Self.FK_Tilaukset_Asiakkaat">
-            <End Role="Asiakkaat" EntitySet="Asiakkaat" />
-            <End Role="Tilaukset" EntitySet="Tilaukset" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Tilaukset_Postitoimipaikat" Association="Self.FK_Tilaukset_Postitoimipaikat">
-            <End Role="Postitoimipaikat" EntitySet="Postitoimipaikat" />
-            <End Role="Tilaukset" EntitySet="Tilaukset" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Tilausrivit_Tilaukset" Association="Self.FK_Tilausrivit_Tilaukset">
-            <End Role="Tilaukset" EntitySet="Tilaukset" />
-            <End Role="Tilausrivit" EntitySet="Tilausrivit" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Tilausrivit_Tuotteet" Association="Self.FK_Tilausrivit_Tuotteet">
-            <End Role="Tuotteet" EntitySet="Tuotteet" />
-            <End Role="Tilausrivit" EntitySet="Tilausrivit" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema></edmx:StorageModels>
+    <Schema Namespace="TilausDBModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="TilausDBModelStoreContainer">
+    <EntitySet Name="Asiakkaat" EntityType="TilausDBModel.Store.Asiakkaat" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Henkilot" EntityType="TilausDBModel.Store.Henkilot" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Logins" EntityType="TilausDBModel.Store.Logins" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Postitoimipaikat" EntityType="TilausDBModel.Store.Postitoimipaikat" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Tilaukset" EntityType="TilausDBModel.Store.Tilaukset" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Tilausrivit" EntityType="TilausDBModel.Store.Tilausrivit" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Tuotteet" EntityType="TilausDBModel.Store.Tuotteet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Post" EntityType="TilausDBModel.Store.Post" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_Asiakkaat_Postitoimipaikat" Association="TilausDBModel.Store.FK_Asiakkaat_Postitoimipaikat">
+      <End Role="Postitoimipaikat" EntitySet="Postitoimipaikat" />
+      <End Role="Asiakkaat" EntitySet="Asiakkaat" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tilaukset_Asiakkaat" Association="TilausDBModel.Store.FK_Tilaukset_Asiakkaat">
+      <End Role="Asiakkaat" EntitySet="Asiakkaat" />
+      <End Role="Tilaukset" EntitySet="Tilaukset" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tilaukset_Postitoimipaikat" Association="TilausDBModel.Store.FK_Tilaukset_Postitoimipaikat">
+      <End Role="Postitoimipaikat" EntitySet="Postitoimipaikat" />
+      <End Role="Tilaukset" EntitySet="Tilaukset" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tilausrivit_Tilaukset" Association="TilausDBModel.Store.FK_Tilausrivit_Tilaukset">
+      <End Role="Tilaukset" EntitySet="Tilaukset" />
+      <End Role="Tilausrivit" EntitySet="Tilausrivit" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tilausrivit_Tuotteet" Association="TilausDBModel.Store.FK_Tilausrivit_Tuotteet">
+      <End Role="Tuotteet" EntitySet="Tuotteet" />
+      <End Role="Tilausrivit" EntitySet="Tilausrivit" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Asiakkaat">
+    <Key>
+      <PropertyRef Name="AsiakasID" />
+    </Key>
+    <Property Name="AsiakasID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nimi" Type="varchar" Nullable="true" MaxLength="50" />
+    <Property Name="Osoite" Type="varchar" Nullable="true" MaxLength="50" />
+    <Property Name="Postinumero" Type="nchar" Nullable="true" MaxLength="5" />
+  </EntityType>
+  <EntityType Name="Henkilot">
+    <Key>
+      <PropertyRef Name="Henkilo_id" />
+    </Key>
+    <Property Name="Henkilo_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Etunimi" Type="nvarchar" Nullable="true" MaxLength="50" />
+    <Property Name="Sukunimi" Type="nvarchar" Nullable="true" MaxLength="50" />
+    <Property Name="Osoite" Type="nvarchar" Nullable="true" MaxLength="100" />
+    <Property Name="Esimies" Type="int" Nullable="true" />
+    <Property Name="Postinumero" Type="varchar" Nullable="true" MaxLength="5" />
+    <Property Name="Sahkoposti" Type="nvarchar" Nullable="true" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Logins">
+    <Key>
+      <PropertyRef Name="LoginId" />
+    </Key>
+    <Property Name="LoginId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="PassWord" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="ErrorMessage" Type="nvarchar" Nullable="true" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Postitoimipaikat">
+    <Key>
+      <PropertyRef Name="Postinumero" />
+    </Key>
+    <Property Name="Postinumero" Type="nchar" Nullable="false" MaxLength="5" />
+    <Property Name="Postitoimipaikka" Type="varchar" Nullable="true" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Tilaukset">
+    <Key>
+      <PropertyRef Name="TilausID" />
+    </Key>
+    <Property Name="TilausID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AsiakasID" Type="int" Nullable="true" />
+    <Property Name="Toimitusosoite" Type="varchar" Nullable="true" MaxLength="100" />
+    <Property Name="Postinumero" Type="nchar" Nullable="true" MaxLength="5" />
+    <Property Name="Tilauspvm" Type="datetime" Nullable="true" />
+    <Property Name="Toimituspvm" Type="datetime" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Tilausrivit">
+    <Key>
+      <PropertyRef Name="TilausriviID" />
+    </Key>
+    <Property Name="TilausriviID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TilausID" Type="int" Nullable="true" />
+    <Property Name="TuoteID" Type="int" Nullable="true" />
+    <Property Name="Maara" Type="int" Nullable="true" />
+    <Property Name="Ahinta" Type="decimal" Nullable="true" Precision="5" Scale="2" />
+  </EntityType>
+  <EntityType Name="Tuotteet">
+    <Key>
+      <PropertyRef Name="TuoteID" />
+    </Key>
+    <Property Name="TuoteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nimi" Type="varchar" Nullable="true" MaxLength="50" />
+    <Property Name="Ahinta" Type="decimal" Nullable="true" Precision="7" Scale="2" />
+    <Property Name="Kuva" Type="varbinary(max)" Nullable="true" />
+    <Property Name="Kuvalinkki" Type="nvarchar" Nullable="true" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="Post">
+    <Key>
+      <PropertyRef Name="Postnro" />
+    </Key>
+    <Property Name="Postnro" Type="nchar" Nullable="false" MaxLength="5" />
+    <Property Name="Postplace" Type="nvarchar" Nullable="true" MaxLength="50" />
+  </EntityType>
+  <Association Name="FK_Asiakkaat_Postitoimipaikat">
+    <End Role="Postitoimipaikat" Type="TilausDBModel.Store.Postitoimipaikat" Multiplicity="0..1" />
+    <End Role="Asiakkaat" Type="TilausDBModel.Store.Asiakkaat" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Postitoimipaikat">
+        <PropertyRef Name="Postinumero" />
+      </Principal>
+      <Dependent Role="Asiakkaat">
+        <PropertyRef Name="Postinumero" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tilaukset_Asiakkaat">
+    <End Role="Asiakkaat" Type="TilausDBModel.Store.Asiakkaat" Multiplicity="0..1" />
+    <End Role="Tilaukset" Type="TilausDBModel.Store.Tilaukset" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Asiakkaat">
+        <PropertyRef Name="AsiakasID" />
+      </Principal>
+      <Dependent Role="Tilaukset">
+        <PropertyRef Name="AsiakasID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tilaukset_Postitoimipaikat">
+    <End Role="Postitoimipaikat" Type="TilausDBModel.Store.Postitoimipaikat" Multiplicity="0..1" />
+    <End Role="Tilaukset" Type="TilausDBModel.Store.Tilaukset" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Postitoimipaikat">
+        <PropertyRef Name="Postinumero" />
+      </Principal>
+      <Dependent Role="Tilaukset">
+        <PropertyRef Name="Postinumero" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tilausrivit_Tilaukset">
+    <End Role="Tilaukset" Type="TilausDBModel.Store.Tilaukset" Multiplicity="0..1" />
+    <End Role="Tilausrivit" Type="TilausDBModel.Store.Tilausrivit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tilaukset">
+        <PropertyRef Name="TilausID" />
+      </Principal>
+      <Dependent Role="Tilausrivit">
+        <PropertyRef Name="TilausID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tilausrivit_Tuotteet">
+    <End Role="Tuotteet" Type="TilausDBModel.Store.Tuotteet" Multiplicity="0..1" />
+    <End Role="Tilausrivit" Type="TilausDBModel.Store.Tilausrivit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tuotteet">
+        <PropertyRef Name="TuoteID" />
+      </Principal>
+      <Dependent Role="Tilausrivit">
+        <PropertyRef Name="TuoteID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TilausDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -337,94 +353,93 @@
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
-      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="TilausDBModelStoreContainer" CdmEntityContainer="TilausDBEntities">
-          <EntitySetMapping Name="Asiakkaat">
-            <EntityTypeMapping TypeName="TilausDBModel.Asiakkaat">
-              <MappingFragment StoreEntitySet="Asiakkaat">
-                <ScalarProperty Name="AsiakasID" ColumnName="AsiakasID" />
-                <ScalarProperty Name="Nimi" ColumnName="Nimi" />
-                <ScalarProperty Name="Osoite" ColumnName="Osoite" />
-                <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Henkilot">
-            <EntityTypeMapping TypeName="TilausDBModel.Henkilot">
-              <MappingFragment StoreEntitySet="Henkilot">
-                <ScalarProperty Name="Henkilo_id" ColumnName="Henkilo_id" />
-                <ScalarProperty Name="Etunimi" ColumnName="Etunimi" />
-                <ScalarProperty Name="Sukunimi" ColumnName="Sukunimi" />
-                <ScalarProperty Name="Osoite" ColumnName="Osoite" />
-                <ScalarProperty Name="Esimies" ColumnName="Esimies" />
-                <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
-                <ScalarProperty Name="Sahkoposti" ColumnName="Sahkoposti" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Logins">
-            <EntityTypeMapping TypeName="TilausDBModel.Logins">
-              <MappingFragment StoreEntitySet="Logins">
-                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
-                <ScalarProperty Name="LoginId" ColumnName="LoginId" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="PassWord" ColumnName="PassWord" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Postitoimipaikat">
-            <EntityTypeMapping TypeName="TilausDBModel.Postitoimipaikat">
-              <MappingFragment StoreEntitySet="Postitoimipaikat">
-                <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
-                <ScalarProperty Name="Postitoimipaikka" ColumnName="Postitoimipaikka" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Tilaukset">
-            <EntityTypeMapping TypeName="TilausDBModel.Tilaukset">
-              <MappingFragment StoreEntitySet="Tilaukset">
-                <ScalarProperty Name="TilausID" ColumnName="TilausID" />
-                <ScalarProperty Name="AsiakasID" ColumnName="AsiakasID" />
-                <ScalarProperty Name="Toimitusosoite" ColumnName="Toimitusosoite" />
-                <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
-                <ScalarProperty Name="Tilauspvm" ColumnName="Tilauspvm" />
-                <ScalarProperty Name="Toimituspvm" ColumnName="Toimituspvm" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Tilausrivit">
-            <EntityTypeMapping TypeName="TilausDBModel.Tilausrivit">
-              <MappingFragment StoreEntitySet="Tilausrivit">
-                <ScalarProperty Name="TilausriviID" ColumnName="TilausriviID" />
-                <ScalarProperty Name="TilausID" ColumnName="TilausID" />
-                <ScalarProperty Name="TuoteID" ColumnName="TuoteID" />
-                <ScalarProperty Name="Maara" ColumnName="Maara" />
-                <ScalarProperty Name="Ahinta" ColumnName="Ahinta" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Tuotteet">
-            <EntityTypeMapping TypeName="TilausDBModel.Tuotteet">
-              <MappingFragment StoreEntitySet="Tuotteet">
-                <ScalarProperty Name="Kuvalinkki" ColumnName="Kuvalinkki" />
-                <ScalarProperty Name="TuoteID" ColumnName="TuoteID" />
-                <ScalarProperty Name="Nimi" ColumnName="Nimi" />
-                <ScalarProperty Name="Ahinta" ColumnName="Ahinta" />
-                <ScalarProperty Name="Kuva" ColumnName="Kuva" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Post">
-            <EntityTypeMapping TypeName="TilausDBModel.Post">
-              <MappingFragment StoreEntitySet="Post">
-                <ScalarProperty Name="Postplace" ColumnName="Postplace" />
-                <ScalarProperty Name="Postnro" ColumnName="Postnro" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-        </EntityContainerMapping>
-      </Mapping>
-    </edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="TilausDBModelStoreContainer" CdmEntityContainer="TilausDBEntities">
+    <EntitySetMapping Name="Asiakkaat">
+      <EntityTypeMapping TypeName="IsTypeOf(TilausDBModel.Asiakkaat)">
+        <MappingFragment StoreEntitySet="Asiakkaat">
+          <ScalarProperty Name="AsiakasID" ColumnName="AsiakasID" />
+          <ScalarProperty Name="Nimi" ColumnName="Nimi" />
+          <ScalarProperty Name="Osoite" ColumnName="Osoite" />
+          <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Henkilot">
+      <EntityTypeMapping TypeName="IsTypeOf(TilausDBModel.Henkilot)">
+        <MappingFragment StoreEntitySet="Henkilot">
+          <ScalarProperty Name="Henkilo_id" ColumnName="Henkilo_id" />
+          <ScalarProperty Name="Etunimi" ColumnName="Etunimi" />
+          <ScalarProperty Name="Sukunimi" ColumnName="Sukunimi" />
+          <ScalarProperty Name="Osoite" ColumnName="Osoite" />
+          <ScalarProperty Name="Esimies" ColumnName="Esimies" />
+          <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
+          <ScalarProperty Name="Sahkoposti" ColumnName="Sahkoposti" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Logins">
+      <EntityTypeMapping TypeName="IsTypeOf(TilausDBModel.Logins)">
+        <MappingFragment StoreEntitySet="Logins">
+          <ScalarProperty Name="LoginId" ColumnName="LoginId" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="PassWord" ColumnName="PassWord" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Postitoimipaikat">
+      <EntityTypeMapping TypeName="IsTypeOf(TilausDBModel.Postitoimipaikat)">
+        <MappingFragment StoreEntitySet="Postitoimipaikat">
+          <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
+          <ScalarProperty Name="Postitoimipaikka" ColumnName="Postitoimipaikka" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Tilaukset">
+      <EntityTypeMapping TypeName="IsTypeOf(TilausDBModel.Tilaukset)">
+        <MappingFragment StoreEntitySet="Tilaukset">
+          <ScalarProperty Name="TilausID" ColumnName="TilausID" />
+          <ScalarProperty Name="AsiakasID" ColumnName="AsiakasID" />
+          <ScalarProperty Name="Toimitusosoite" ColumnName="Toimitusosoite" />
+          <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
+          <ScalarProperty Name="Tilauspvm" ColumnName="Tilauspvm" />
+          <ScalarProperty Name="Toimituspvm" ColumnName="Toimituspvm" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Tilausrivit">
+      <EntityTypeMapping TypeName="IsTypeOf(TilausDBModel.Tilausrivit)">
+        <MappingFragment StoreEntitySet="Tilausrivit">
+          <ScalarProperty Name="TilausriviID" ColumnName="TilausriviID" />
+          <ScalarProperty Name="TilausID" ColumnName="TilausID" />
+          <ScalarProperty Name="TuoteID" ColumnName="TuoteID" />
+          <ScalarProperty Name="Maara" ColumnName="Maara" />
+          <ScalarProperty Name="Ahinta" ColumnName="Ahinta" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Tuotteet">
+      <EntityTypeMapping TypeName="IsTypeOf(TilausDBModel.Tuotteet)">
+        <MappingFragment StoreEntitySet="Tuotteet">
+          <ScalarProperty Name="TuoteID" ColumnName="TuoteID" />
+          <ScalarProperty Name="Nimi" ColumnName="Nimi" />
+          <ScalarProperty Name="Ahinta" ColumnName="Ahinta" />
+          <ScalarProperty Name="Kuva" ColumnName="Kuva" />
+          <ScalarProperty Name="Kuvalinkki" ColumnName="Kuvalinkki" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Post">
+      <EntityTypeMapping TypeName="IsTypeOf(TilausDBModel.Post)">
+        <MappingFragment StoreEntitySet="Post">
+          <ScalarProperty Name="Postnro" ColumnName="Postnro" />
+          <ScalarProperty Name="Postplace" ColumnName="Postplace" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
   <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
@@ -438,7 +453,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
-        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>
