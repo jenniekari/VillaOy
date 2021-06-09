@@ -194,7 +194,6 @@
       <LastGenOutput>TilausDB.Context.cs</LastGenOutput>
       <DependentUpon>TilausDB.edmx</DependentUpon>
     </Content>
-    <Content Include="Models\TilausDB.edmx.sql" />
     <Content Include="Models\TilausDB.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>TilausDB.edmx</DependentUpon>
