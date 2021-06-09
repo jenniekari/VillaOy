@@ -54,6 +54,7 @@ namespace VillaOy.Controllers
             }
             else
             {
+                ViewBag.LoggedStatus = "In";
                 List<Tuotteet> model = db.Tuotteet.ToList();
                 db.Dispose();
 
@@ -99,29 +100,45 @@ namespace VillaOy.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "TuoteID,Nimi,Ahinta,Kuva")] Tuotteet tuotteet)
         {
-            if (ModelState.IsValid)
+            if (Session["UserName"] == null)
             {
-                db.Tuotteet.Add(tuotteet);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
+            else
+            {
+                ViewBag.LoggedStatus = "In";
+                if (ModelState.IsValid)
+                {
+                    db.Tuotteet.Add(tuotteet);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
 
-            return View(tuotteet);
+                return View(tuotteet);
+            }
         }
 
         // GET: TuotteetAdmin/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Tuotteet tuotteet = db.Tuotteet.Find(id);
-            if (tuotteet == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Tuotteet tuotteet = db.Tuotteet.Find(id);
+                if (tuotteet == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(tuotteet);
             }
-            return View(tuotteet);
         }
 
         // POST: TuotteetAdmin/Edit/5
@@ -143,16 +160,24 @@ namespace VillaOy.Controllers
         // GET: TuotteetAdmin/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Tuotteet tuotteet = db.Tuotteet.Find(id);
-            if (tuotteet == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Tuotteet tuotteet = db.Tuotteet.Find(id);
+                if (tuotteet == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(tuotteet);
             }
-            return View(tuotteet);
         }
 
         // POST: TuotteetAdmin/Delete/5

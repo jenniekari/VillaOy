@@ -54,6 +54,7 @@ namespace VillaOy.Controllers
             }
             else
             {
+                ViewBag.LoggedStatus = "In";
                 return View(db.Henkilot.ToList());
             }
         }
@@ -61,22 +62,38 @@ namespace VillaOy.Controllers
         // GET: Henkilot/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Henkilot henkilot = db.Henkilot.Find(id);
-            if (henkilot == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Henkilot henkilot = db.Henkilot.Find(id);
+                if (henkilot == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(henkilot);
             }
-            return View(henkilot);
         }
 
         // GET: Henkilot/Create
         public ActionResult Create()
         {
-            return View();
+            if (Session["UserName"] == null)
+            {
+                return RedirectToAction("Login", "TuotteetAdmin");
+            }
+            else
+            {
+                ViewBag.LoggedStatus = "In";
+                return View();
+            }
         }
 
         // POST: Henkilot/Create
@@ -99,16 +116,24 @@ namespace VillaOy.Controllers
         // GET: Henkilot/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Henkilot henkilot = db.Henkilot.Find(id);
-            if (henkilot == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Henkilot henkilot = db.Henkilot.Find(id);
+                if (henkilot == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(henkilot);
             }
-            return View(henkilot);
         }
 
         // POST: Henkilot/Edit/5
@@ -130,16 +155,24 @@ namespace VillaOy.Controllers
         // GET: Henkilot/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Henkilot henkilot = db.Henkilot.Find(id);
-            if (henkilot == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Henkilot henkilot = db.Henkilot.Find(id);
+                if (henkilot == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(henkilot);
             }
-            return View(henkilot);
         }
 
         // POST: Henkilot/Delete/5

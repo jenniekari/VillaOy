@@ -54,6 +54,7 @@ namespace VillaOy.Controllers
             }
             else
             {
+                ViewBag.LoggedStatus = "In";
                 var tilaukset = db.Tilaukset.Include(t => t.Asiakkaat).Include(t => t.Postitoimipaikat);
                 return View(tilaukset.ToList());
 
@@ -70,24 +71,40 @@ namespace VillaOy.Controllers
         // GET: Tilauksets/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Tilaukset tilaukset = db.Tilaukset.Find(id);
-            if (tilaukset == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Tilaukset tilaukset = db.Tilaukset.Find(id);
+                if (tilaukset == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(tilaukset);
             }
-            return View(tilaukset);
         }
 
         // GET: Tilauksets/Create
         public ActionResult Create()
         {
-            ViewBag.AsiakasID = new SelectList(db.Asiakkaat, "AsiakasID", "Nimi");
-            ViewBag.Postinumero = new SelectList(db.Postitoimipaikat, "Postinumero", "Postitoimipaikka");
-            return View();
+            if (Session["UserName"] == null)
+            {
+                return RedirectToAction("Login", "TuotteetAdmin");
+            }
+            else
+            {
+                ViewBag.LoggedStatus = "In";
+                ViewBag.AsiakasID = new SelectList(db.Asiakkaat, "AsiakasID", "Nimi");
+                ViewBag.Postinumero = new SelectList(db.Postitoimipaikat, "Postinumero", "Postitoimipaikka");
+                return View();
+            }
         }
 
         // POST: Tilauksets/Create
@@ -112,18 +129,26 @@ namespace VillaOy.Controllers
         // GET: Tilauksets/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Tilaukset tilaukset = db.Tilaukset.Find(id);
-            if (tilaukset == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Tilaukset tilaukset = db.Tilaukset.Find(id);
+                if (tilaukset == null)
+                {
+                    return HttpNotFound();
+                }
+                ViewBag.AsiakasID = new SelectList(db.Asiakkaat, "AsiakasID", "Nimi", tilaukset.AsiakasID);
+                ViewBag.Postinumero = new SelectList(db.Postitoimipaikat, "Postinumero", "Postitoimipaikka", tilaukset.Postinumero);
+                return View(tilaukset);
             }
-            ViewBag.AsiakasID = new SelectList(db.Asiakkaat, "AsiakasID", "Nimi", tilaukset.AsiakasID);
-            ViewBag.Postinumero = new SelectList(db.Postitoimipaikat, "Postinumero", "Postitoimipaikka", tilaukset.Postinumero);
-            return View(tilaukset);
         }
 
         // POST: Tilauksets/Edit/5
@@ -147,16 +172,24 @@ namespace VillaOy.Controllers
         // GET: Tilauksets/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Tilaukset tilaukset = db.Tilaukset.Find(id);
-            if (tilaukset == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Tilaukset tilaukset = db.Tilaukset.Find(id);
+                if (tilaukset == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(tilaukset);
             }
-            return View(tilaukset);
         }
 
         // POST: Tilauksets/Delete/5

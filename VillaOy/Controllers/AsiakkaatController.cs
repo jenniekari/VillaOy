@@ -53,31 +53,48 @@ namespace VillaOy.Controllers
             }
             else
             {
-            var asiakkaat = db.Asiakkaat.Include(a => a.Postitoimipaikat);
-            return View(asiakkaat.ToList());
+                ViewBag.LoggedStatus = "In";
+                var asiakkaat = db.Asiakkaat.Include(a => a.Postitoimipaikat);
+                return View(asiakkaat.ToList());
             }
         }
 
         // GET: Asiakkaat/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Asiakkaat asiakkaat = db.Asiakkaat.Find(id);
-            if (asiakkaat == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Asiakkaat asiakkaat = db.Asiakkaat.Find(id);
+                if (asiakkaat == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(asiakkaat);
             }
-            return View(asiakkaat);
         }
 
         // GET: Asiakkaat/Create
         public ActionResult Create()
         {
-            ViewBag.Postinumero = new SelectList(db.Postitoimipaikat, "Postinumero", "Postitoimipaikka");
-            return View();
+            if (Session["UserName"] == null)
+            {
+                return RedirectToAction("Login", "TuotteetAdmin");
+            }
+            else
+            {
+                ViewBag.LoggedStatus = "In";
+                ViewBag.Postinumero = new SelectList(db.Postitoimipaikat, "Postinumero", "Postitoimipaikka");
+                return View();
+            }
         }
 
         // POST: Asiakkaat/Create
@@ -101,27 +118,35 @@ namespace VillaOy.Controllers
         // GET: Asiakkaat/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Asiakkaat asiakkaat = db.Asiakkaat.Find(id);
-            if (asiakkaat == null)
+            else
             {
-                return HttpNotFound();
-            }
-            
-            var post = db.Post;
-            IEnumerable<SelectListItem> selectPostiList = from p in post
-                                                          select new SelectListItem
-                                                          {
-                                                              Value = p.Postnro.ToString(),
-                                                              Text = p.Postnro + " " + p.Postplace
-                                                          };
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Asiakkaat asiakkaat = db.Asiakkaat.Find(id);
+                if (asiakkaat == null)
+                {
+                    return HttpNotFound();
+                }
 
-            ViewBag.Postnro = new SelectList(selectPostiList, "Value", "Text", asiakkaat.Postinumero);
-            //ViewBag.Postinumero = new SelectList(db.Postitoimipaikat, "Postinumero", "Postitoimipaikka", asiakkaat.Postinumero);
-            return View(asiakkaat);
+                /*var post = db.Post;
+                IEnumerable<SelectListItem> selectPostiList = from p in post
+                                                              select new SelectListItem
+                                                              {
+                                                                  Value = p.Postnro.ToString(),
+                                                                  Text = p.Postnro + " " + p.Postplace
+                                                              };
+
+                ViewBag.Postnro = new SelectList(selectPostiList, "Value", "Text", asiakkaat.Postinumero);*/
+                ViewBag.Postinumero = new SelectList(db.Postitoimipaikat, "Postinumero", "Postitoimipaikka", asiakkaat.Postinumero);
+                return View(asiakkaat);
+            }
         }
 
         // POST: Asiakkaat/Edit/5
@@ -153,16 +178,24 @@ namespace VillaOy.Controllers
         // GET: Asiakkaat/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Asiakkaat asiakkaat = db.Asiakkaat.Find(id);
-            if (asiakkaat == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Asiakkaat asiakkaat = db.Asiakkaat.Find(id);
+                if (asiakkaat == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(asiakkaat);
             }
-            return View(asiakkaat);
         }
 
         // POST: Asiakkaat/Delete/5

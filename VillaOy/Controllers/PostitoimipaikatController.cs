@@ -55,6 +55,7 @@ namespace VillaOy.Controllers
             }
             else
             {
+                ViewBag.LoggedStatus = "In";
                 return View(db.Postitoimipaikat.ToList());
             }
         }
@@ -62,22 +63,38 @@ namespace VillaOy.Controllers
         // GET: Postitoimipaikat/Details/5
         public ActionResult Details(string id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Postitoimipaikat postitoimipaikat = db.Postitoimipaikat.Find(id);
-            if (postitoimipaikat == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Postitoimipaikat postitoimipaikat = db.Postitoimipaikat.Find(id);
+                if (postitoimipaikat == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(postitoimipaikat);
             }
-            return View(postitoimipaikat);
         }
 
         // GET: Postitoimipaikat/Create
         public ActionResult Create()
         {
-            return View();
+            if (Session["UserName"] == null)
+            {
+                return RedirectToAction("Login", "TuotteetAdmin");
+            }
+            else
+            {
+                ViewBag.LoggedStatus = "In";
+                return View();
+            }
         }
 
         // POST: Postitoimipaikat/Create
@@ -100,16 +117,24 @@ namespace VillaOy.Controllers
         // GET: Postitoimipaikat/Edit/5
         public ActionResult Edit(string id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Postitoimipaikat postitoimipaikat = db.Postitoimipaikat.Find(id);
-            if (postitoimipaikat == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Postitoimipaikat postitoimipaikat = db.Postitoimipaikat.Find(id);
+                if (postitoimipaikat == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(postitoimipaikat);
             }
-            return View(postitoimipaikat);
         }
 
         // POST: Postitoimipaikat/Edit/5
@@ -131,16 +156,24 @@ namespace VillaOy.Controllers
         // GET: Postitoimipaikat/Delete/5
         public ActionResult Delete(string id)
         {
-            if (id == null)
+            if (Session["UserName"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "TuotteetAdmin");
             }
-            Postitoimipaikat postitoimipaikat = db.Postitoimipaikat.Find(id);
-            if (postitoimipaikat == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.LoggedStatus = "In";
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Postitoimipaikat postitoimipaikat = db.Postitoimipaikat.Find(id);
+                if (postitoimipaikat == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(postitoimipaikat);
             }
-            return View(postitoimipaikat);
         }
 
         // POST: Postitoimipaikat/Delete/5
